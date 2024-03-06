@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple File Upload</title>
+</head>
+<body>
+    <h2>Multiple File Upload</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="files" multiple>
+        <br>
+        <button type="submit">Upload Files</button>
+    </form>
+    <div id="fileNames"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const files = await response.json();
+            const fileNamesElement = document.getElementById('fileNames');
+            fileNamesElement.innerHTML = ''; // Clear previous content
+            files.forEach(file => {
+                const fileNameNode = document.createElement('p');
+                fileNameNode.textContent = file.originalname;
+                fileNamesElement.appendChild(fileNameNode);
+            });
+        });
+    </script>
+</body>
+</html>
